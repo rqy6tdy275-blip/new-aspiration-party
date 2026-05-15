@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0B7A33" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ความหวังใหม่" />
+  <title>ความหวังใหม่ | Mobile App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0B7A33;
+      --primary-dark: #085c26;
+      --primary-light: #e8f5e9;
+      --secondary: #FFF04F;
+      --accent: #F5C400;
+      --dark: #1A1A1A;
+      --bg: #F4F6F4;
+      --card: #fff;
+      --border: #eee;
+      --text: #222;
+      --text-muted: #888;
+      --nav-h: 64px;
+      --status-h: env(safe-area-inset-top, 0px);
+      --bottom-h: 72px;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 24px rgba(0,0,0,0.12);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    html { height: 100%; }
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100%;
+      overflow: hidden;
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ===== PHONE SHELL (desktop preview) ===== */
+    @media (min-width: 500px) {
+      body {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        box-shadow: 0 0 40px rgba(0,0,0,0.15);
+        background: var(--bg);
+      }
+    }
+
+    /* ===== SPLASH ===== */
+    #splash {
+      position: fixed; inset: 0;
+      background: linear-gradient(145deg, #0B7A33 0%, #1a9a40 50%, #085c26 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 9999;
+      transition: opacity 0.5s, transform 0.5s;
+    }
+
+    #splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+
+    .splash-logo { font-size: 80px; margin-bottom: 16px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    .splash-name { font-size: 22px; font-weight: 800; color: #fff; font-family: 'Kanit', sans-serif; }
+    .splash-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+    .splash-loader { margin-top: 40px; width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
+    .splash-loader-fill { height: 100%; background: var(--secondary); border-radius: 2px; animation: load 1.5s ease-in-out forwards; }
+    @keyframes load { from{width:0} to{width:100%} }
+
+    /* ===== APP SHELL ===== */
+    #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    /* ===== TOP NAV ===== */
+    .topnav {
+      background: var(--primary);
+      padding: calc(var(--status-h) + 12px) 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(11,122,51,0.3);
+    }
+
+    .topnav-title { font-size: 18px; font-weight: 700; color: #fff; font-family: 'Kanit', sans-serif; }
+    .topnav-logo { font-size: 26px; }
+    .topnav-actions { display: flex; gap: 8px; }
+
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; border: none; cursor: pointer; color: #fff;
+      position: relative;
+    }
+
+    .notif-dot {
+      position: absolute; top: 4px; right: 4px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); border: 1.5px solid var(--primary);
+    }
+
+    /* ===== PAGES ===== */
+    .pages {
+      flex: 1;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      padding-bottom: var(--bottom-h);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ===== HOME PAGE ===== */
+
+    /* Hero */
+    .hero-card {
+      background: linear-gradient(135deg, #0B7A33 0%, #1a9a40 100%);
+      margin: 16px 16px 0;
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: '🌻';
+      position: absolute;
+      right: -10px; top: -10px;
+      font-size: 100px;
+      opacity: 0.12;
+      transform: rotate(15deg);
+    }
+
+    .hero-card h2 {
+      font-size: 20px; font-weight: 800;
+      color: #fff; font-family: 'Kanit', sans-serif;
+      line-height: 1.3; margin-bottom: 8px;
+    }
+
+    .hero-card p { font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 16px; line-height: 1.5; }
+
+    .hero-card-btns { display: flex; gap: 10px; }
+
+    .hero-btn-w {
+      flex: 1; padding: 10px;
+      background: rgba(255,255,255,0.2);
+      color: #fff; border: 1.5px solid rgba(255,255,255,0.5);
+      border-radius: var(--radius-sm); font-size: 13px;
+      font-family: 'Sarabun', sans-serif; font-weight: 700;
+      cursor: pointer; text-align: center;
+    }
+
+    .hero-btn-y {
+      flex: 1; padding: 10px;
+      background: var(--accent); color: var(--dark);
+      border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-family: 'Sarabun', sans-serif; font-weight: 700;
+      cursor: pointer; text-align: center;
+    }
+
+    /* Stats strip */
+    .stats-strip {
+      display: flex; gap: 12px;
+      padding: 14px 16px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .stats-strip::-webkit-scrollbar { display: none; }
+
+    .stat-pill {
+      background: var(--card); border-radius: 12px;
+      padding: 12px 16px; flex-shrink: 0;
+      box-shadow: var(--shadow); text-align: center;
+      min-width: 90px;
+    }
+
+    .stat-pill .sn { font-size: 20px; font-weight: 800; color: var(--primary); font-family: 'Kanit', sans-serif; }
+    .stat-pill .sl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Quick actions */
+    .section-title {
+      font-size: 16px; font-weight: 700; color: var(--dark);
+      padding: 4px 16px 10px; font-family: 'Kanit', sans-serif;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .section-title a { font-size: 12px; color: var(--primary); font-weight: 600; text-decoration: none; }
+
+    .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 16px 16px; }
+
+    .quick-item {
+      background: var(--card); border-radius: var(--radius-sm);
+      padding: 14px 8px; text-align: center;
+      box-shadow: var(--shadow); cursor: pointer;
+      transition: transform 0.15s;
+      text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+
+    .quick-item:active { transform: scale(0.95); }
+    .quick-item .qi { font-size: 26px; }
+    .quick-item .ql { font-size: 11px; color: var(--text); font-weight: 600; line-height: 1.3; }
+
+    /* Card rows */
+    .cards-row {
+      display: flex; gap: 14px;
+      padding: 0 16px 16px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .cards-row::-webkit-scrollbar { display: none; }
+
+    /* News card */
+    .news-card {
+      background: var(--card); border-radius: var(--radius);
+      overflow: hidden; flex-shrink: 0; width: 260px;
+      box-shadow: var(--shadow); cursor: pointer;
+    }
+
+    .news-thumb {
+      height: 130px; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 48px; position: relative;
+    }
+
+    .news-tag {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--primary); color: #fff;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 20px;
+    }
+
+    .news-tag.act { background: var(--accent); color: var(--dark); }
+
+    .news-body { padding: 14px; }
+    .news-date { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+    .news-body h4 { font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 8px; color: var(--dark); }
+    .read-link { font-size: 12px; color: var(--primary); font-weight: 600; }
+
+    /* Policy card */
+    .policy-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 18px; flex-shrink: 0; width: 180px;
+      box-shadow: var(--shadow); text-align: center; cursor: pointer;
+    }
+
+    .policy-icon { font-size: 36px; margin-bottom: 10px; }
+    .policy-name { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+    .policy-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Event card */
+    .event-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 16px; margin: 0 16px 12px;
+      box-shadow: var(--shadow); display: flex; gap: 14px; align-items: center;
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .event-card:active { transform: scale(0.98); }
+
+    .event-date-box {
+      background: var(--primary); color: #fff;
+      border-radius: 10px; padding: 10px 12px;
+      text-align: center; flex-shrink: 0; min-width: 52px;
+    }
+    .event-date-box .day { font-size: 22px; font-weight: 800; font-family: 'Kanit', sans-serif; line-height: 1; }
+    .event-date-box .month { font-size: 10px; opacity: 0.8; }
+
+    .event-info { flex: 1; }
+    .event-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; line-height: 1.4; }
+    .event-meta { font-size: 11px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 8px; }
+    .event-reg-btn {
+      background: var(--primary-light); color: var(--primary);
+      border: none; padding: 6px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 700; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; flex-shrink: 0;
+    }
+
+    /* Digital Member Card */
+    .member-card {
+      background: linear-gradient(135deg, #0B7A33 0%, #1a9a40 60%, #F5C400 100%);
+      margin: 16px;
+      border-radius: 20px;
+      padding: 24px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(11,122,51,0.35);
+    }
+
+    .member-card::before {
+      content: '🌻';
+      position: absolute; right: 16px; top: 16px;
+      font-size: 60px; opacity: 0.15;
+    }
+
+    .member-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .mc-party { font-size: 11px; opacity: 0.8; }
+    .mc-name-th { font-size: 13px; font-weight: 700; font-family: 'Kanit', sans-serif; }
+    .mc-chip { background: var(--accent); color: var(--dark); font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+    .member-card-mid { margin-bottom: 20px; }
+    .mc-member-name { font-size: 22px; font-weight: 800; font-family: 'Kanit', sans-serif; margin-bottom: 4px; }
+    .mc-id { font-size: 13px; opacity: 0.8; letter-spacing: 1px; }
+    .mc-type { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+
+    .member-card-bot { display: flex; justify-content: space-between; align-items: flex-end; }
+    .mc-expire { font-size: 11px; opacity: 0.7; }
+    .mc-expire strong { font-size: 13px; opacity: 1; }
+    .mc-qr { background: #fff; padding: 8px; border-radius: 8px; text-align: center; font-size: 28px; }
+    .mc-qr-label { font-size: 9px; color: var(--primary); font-weight: 700; margin-top: 2px; }
+
+    /* ===== NEWS PAGE ===== */
+    .news-list { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+    .news-list-item {
+      background: var(--card); border-radius: var(--radius);
+      overflow: hidden; box-shadow: var(--shadow); cursor: pointer;
+      display: flex; gap: 0; transition: transform 0.15s;
+    }
+    .news-list-item:active { transform: scale(0.98); }
+
+    .nli-thumb {
+      width: 100px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+    }
+
+    .nli-body { padding: 14px 14px 14px 0; flex: 1; }
+    .nli-tag { font-size: 10px; font-weight: 700; color: var(--primary); background: var(--primary-light); padding: 2px 8px; border-radius: 20px; display: inline-block; margin-bottom: 6px; }
+    .nli-title { font-size: 14px; font-weight: 700; line-height: 1.4; margin-bottom: 6px; color: var(--dark); }
+    .nli-date { font-size: 11px; color: var(--text-muted); }
+
+    .filter-tabs {
+      display: flex; gap: 8px; padding: 12px 16px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+
+    .filter-tab {
+      flex-shrink: 0; padding: 7px 16px;
+      border-radius: 20px; font-size: 13px; font-weight: 600;
+      border: 1.5px solid #ddd; color: var(--text-muted);
+      background: var(--card); cursor: pointer; transition: all 0.2s;
+    }
+
+    .filter-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ===== DONATE PAGE ===== */
+    .donate-page { padding: 16px; }
+
+    .donate-amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+
+    .amount-chip {
+      background: var(--card); border-radius: var(--radius-sm);
+      padding: 14px 8px; text-align: center;
+      font-size: 16px; font-weight: 700; color: var(--primary);
+      box-shadow: var(--shadow); cursor: pointer;
+      border: 2px solid transparent; transition: all 0.2s;
+    }
+    .amount-chip.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .amount-chip sub { font-size: 11px; font-weight: 400; }
+
+    .pay-method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .pay-method {
+      background: var(--card); border-radius: var(--radius);
+      padding: 16px; text-align: center; cursor: pointer;
+      border: 2px solid var(--border); transition: all 0.2s;
+    }
+    .pay-method.selected { border-color: var(--primary); background: var(--primary-light); }
+    .pay-method .pm-icon { font-size: 32px; margin-bottom: 8px; }
+    .pay-method .pm-name { font-size: 13px; font-weight: 700; }
+
+    .qr-box {
+      background: var(--card); border-radius: var(--radius);
+      padding: 24px; text-align: center; box-shadow: var(--shadow); margin-bottom: 16px;
+    }
+    .qr-box .qr { font-size: 100px; line-height: 1; margin-bottom: 12px; }
+    .qr-box .qr-no { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 4px; font-family: 'Kanit', sans-serif; }
+    .qr-box .qr-name { font-size: 13px; color: var(--text-muted); }
+
+    /* ===== PROFILE PAGE ===== */
+    .profile-header {
+      background: linear-gradient(135deg, #0B7A33, #1a9a40);
+      padding: 32px 20px 24px;
+      text-align: center;
+    }
+    .profile-avatar { font-size: 60px; margin-bottom: 12px; }
+    .profile-name { font-size: 20px; font-weight: 800; color: #fff; font-family: 'Kanit', sans-serif; }
+    .profile-id { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+    .profile-badge { display: inline-block; background: var(--accent); color: var(--dark); font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-top: 10px; }
+
+    .profile-menu { padding: 16px; display: flex; flex-direction: column; gap: 0; }
+
+    .profile-menu-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .profile-menu-item:last-child { border-bottom: none; }
+    .profile-menu-item:active { opacity: 0.6; }
+    .pmi-icon { font-size: 22px; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .pmi-text { flex: 1; }
+    .pmi-title { font-size: 15px; font-weight: 600; }
+    .pmi-sub { font-size: 12px; color: var(--text-muted); }
+    .pmi-arrow { font-size: 16px; color: #ccc; }
+
+    /* ===== BOTTOM NAV ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      max-width: 430px;
+      margin: 0 auto;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      height: var(--bottom-h);
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .bn-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 4px;
+      padding: 8px 0; cursor: pointer; transition: all 0.2s;
+      color: #bbb; text-decoration: none;
+    }
+
+    .bn-item.active { color: var(--primary); }
+    .bn-item .bn-icon { font-size: 22px; }
+    .bn-item .bn-label { font-size: 10px; font-weight: 600; }
+
+    .bn-center {
+      width: 56px; height: 56px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 20px rgba(11,122,51,0.4);
+      margin-top: -20px;
+      cursor: pointer;
+      border: 3px solid var(--card);
+      flex-shrink: 0;
+    }
+
+    /* ===== SEARCH BAR ===== */
+    .search-wrap { padding: 12px 16px; }
+    .search-box {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--card); border-radius: 12px;
+      padding: 12px 16px; box-shadow: var(--shadow);
+    }
+    .search-box input { border: none; outline: none; flex: 1; font-family: 'Sarabun',sans-serif; font-size: 14px; background: transparent; }
+
+    /* ===== DARK MODE ===== */
+    .dark-mode-banner {
+      margin: 16px; background: var(--dark); border-radius: var(--radius);
+      padding: 16px; display: flex; align-items: center; gap: 14px;
+      cursor: pointer;
+    }
+    .dark-mode-banner span { font-size: 24px; }
+    .dark-mode-banner div { flex: 1; }
+    .dark-mode-banner h4 { font-size: 14px; font-weight: 700; color: #fff; }
+    .dark-mode-banner p { font-size: 12px; color: #aaa; }
+    .toggle {
+      width: 44px; height: 24px; border-radius: 12px;
+      background: #555; position: relative; cursor: pointer; flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .toggle.on { background: var(--primary); }
+    .toggle::after {
+      content: ''; position: absolute;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: #fff; top: 2px; left: 2px;
+      transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .toggle.on::after { transform: translateX(20px); }
+
+    /* ===== TOAST ===== */
+    .toast-container { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .toast {
+      background: rgba(26,26,26,0.92); color: #fff;
+      padding: 10px 20px; border-radius: 24px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+      animation: toastIn 0.3s ease; white-space: nowrap;
+      backdrop-filter: blur(10px);
+    }
+    @keyframes toastIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 0; }
+  </style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">🌻</div>
+  <div class="splash-name">ความหวังใหม่</div>
+  <div class="splash-sub">New Aspiration Party</div>
+  <div class="splash-loader"><div class="splash-loader-fill"></div></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <div class="topnav-logo">🌻</div>
+    <div class="topnav-title" id="pageTitle">หน้าแรก</div>
+    <div class="topnav-actions">
+      <button class="icon-btn" onclick="toast('ไม่มีการแจ้งเตือนใหม่')">🔔<span class="notif-dot"></span></button>
+      <button class="icon-btn" onclick="toast('ค้นหา...')">🔍</button>
+    </div>
+  </div>
+
+  <!-- PAGES -->
+  <div class="pages" id="pagesContainer">
+
+    <!-- ====== HOME ====== -->
+    <div class="page active" id="page-home">
+
+      <!-- Hero -->
+      <div class="hero-card">
+        <h2>ร่วมสร้าง<br>ความหวังใหม่</h2>
+        <p>เพื่ออนาคตที่ดีกว่า ด้วยพลังของทุกคน</p>
+        <div class="hero-card-btns">
+          <button class="hero-btn-y" onclick="goPage('donate'); toast('ไปหน้าบริจาค')">💛 บริจาค</button>
+          <button class="hero-btn-w" onclick="goPage('profile'); toast('ดูข้อมูลสมาชิก')">🌟 สมาชิก</button>
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="stats-strip">
+        <div class="stat-pill"><div class="sn">50K+</div><div class="sl">สมาชิก</div></div>
+        <div class="stat-pill"><div class="sn">77</div><div class="sl">จังหวัด</div></div>
+        <div class="stat-pill"><div class="sn">10+</div><div class="sl">นโยบาย</div></div>
+        <div class="stat-pill"><div class="sn">3.5K</div><div class="sl">อาสาสมัคร</div></div>
+        <div class="stat-pill"><div class="sn">128</div><div class="sl">ข่าว</div></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="section-title">เมนูด่วน</div>
+      <div class="quick-grid">
+        <a class="quick-item" onclick="goPage('news')">
+          <span class="qi">📰</span><span class="ql">ข่าวสาร</span>
+        </a>
+        <a class="quick-item" onclick="goPage('events')">
+          <span class="qi">📅</span><span class="ql">กิจกรรม</span>
+        </a>
+        <a class="quick-item" onclick="goPage('donate')">
+          <span class="qi">💰</span><span class="ql">บริจาค</span>
+        </a>
+        <a class="quick-item" onclick="toast('เปิดแผนที่พรรค')">
+          <span class="qi">📍</span><span class="ql">ที่ตั้งพรรค</span>
+        </a>
+        <a class="quick-item" onclick="toast('นโยบายพรรค')">
+          <span class="qi">📋</span><span class="ql">นโยบาย</span>
+        </a>
+        <a class="quick-item" onclick="toast('ระบบ Poll')">
+          <span class="qi">📊</span><span class="ql">โหวต</span>
+        </a>
+        <a class="quick-item" onclick="toast('ระบบอาสาสมัคร')">
+          <span class="qi">🙋</span><span class="ql">อาสาสมัคร</span>
+        </a>
+        <a class="quick-item" onclick="toast('Live สด!')">
+          <span class="qi">📡</span><span class="ql">Live สด</span>
+        </a>
+      </div>
+
+      <!-- News -->
+      <div class="section-title">ข่าวล่าสุด <a onclick="goPage('news')">ดูทั้งหมด</a></div>
+      <div class="cards-row">
+        <div class="news-card" onclick="toast('เปิดข่าว')">
+          <div class="news-thumb" style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9)">
+            🏙️<span class="news-tag">ข่าวพรรค</span>
+          </div>
+          <div class="news-body">
+            <div class="news-date">📅 20 พ.ค. 2569</div>
+            <h4>พรรคความหวังใหม่ เปิดตัวนโยบายเศรษฐกิจฐานราษฎร</h4>
+            <span class="read-link">อ่านต่อ →</span>
+          </div>
+        </div>
+        <div class="news-card" onclick="toast('เปิดข่าว')">
+          <div class="news-thumb" style="background:linear-gradient(135deg,#fff9c4,#fff176)">
+            🎤<span class="news-tag act">กิจกรรม</span>
+          </div>
+          <div class="news-body">
+            <div class="news-date">📅 18 พ.ค. 2569</div>
+            <h4>ลงพื้นที่รับฟังประชาชน จังหวัดเชียงใหม่</h4>
+            <span class="read-link">อ่านต่อ →</span>
+          </div>
+        </div>
+        <div class="news-card" onclick="toast('เปิดข่าว')">
+          <div class="news-thumb" style="background:linear-gradient(135deg,#b3e5fc,#81d4fa)">
+            💨<span class="news-tag">ข่าวพรรค</span>
+          </div>
+          <div class="news-body">
+            <div class="news-date">📅 15 พ.ค. 2569</div>
+            <h4>เสนอโมเดลพลังงานสะอาด เพื่ออนาคตที่ยั่งยืน</h4>
+            <span class="read-link">อ่านต่อ →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Policy -->
+      <div class="section-title">นโยบายพรรค <a onclick="toast('ดูนโยบายทั้งหมด')">ดูทั้งหมด</a></div>
+      <div class="cards-row">
+        <div class="policy-card" onclick="toast('เศรษฐกิจ')">
+          <div class="policy-icon">📈</div>
+          <div class="policy-name">เศรษฐกิจ</div>
+          <div class="policy-desc">สร้างรายได้มั่นคงสำหรับทุกคน</div>
+        </div>
+        <div class="policy-card" onclick="toast('การศึกษา')">
+          <div class="policy-icon">📚</div>
+          <div class="policy-name">การศึกษา</div>
+          <div class="policy-desc">เท่าเทียม มีคุณภาพ ทั่วถึง</div>
+        </div>
+        <div class="policy-card" onclick="toast('สาธารณสุข')">
+          <div class="policy-icon">🏥</div>
+          <div class="policy-name">สาธารณสุข</div>
+          <div class="policy-desc">สุขภาพดีสำหรับทุกคน</div>
+        </div>
+        <div class="policy-card" onclick="toast('สิ่งแวดล้อม')">
+          <div class="policy-icon">🌱</div>
+          <div class="policy-name">สิ่งแวดล้อม</div>
+          <div class="policy-desc">พลังงานสะอาด ยั่งยืน</div>
+        </div>
+        <div class="policy-card" onclick="toast('เทคโนโลยี')">
+          <div class="policy-icon">💻</div>
+          <div class="policy-name">เทคโนโลยี</div>
+          <div class="policy-desc">Digital Thailand</div>
+        </div>
+      </div>
+
+      <!-- Event -->
+      <div class="section-title">กิจกรรมที่กำลังจะมา <a onclick="goPage('events')">ดูทั้งหมด</a></div>
+      <div class="event-card" onclick="toast('ลงทะเบียนกิจกรรม')">
+        <div class="event-date-box">
+          <div class="day">15</div>
+          <div class="month">มิ.ย.</div>
+        </div>
+        <div class="event-info">
+          <h4>ประชุมใหญ่พรรคความหวังใหม่ ประจำปี 2569</h4>
+          <div class="event-meta"><span>🕘 09:00 น.</span><span>📍 กรุงเทพฯ</span><span>👥 3,200</span></div>
+        </div>
+        <button class="event-reg-btn" onclick="toast('ลงทะเบียนแล้ว!'); event.stopPropagation()">ลงทะเบียน</button>
+      </div>
+      <div class="event-card" onclick="toast('ลงทะเบียนกิจกรรม')">
+        <div class="event-date-box" style="background:var(--info,#1565c0)">
+          <div class="day">25</div>
+          <div class="month">พ.ค.</div>
+        </div>
+        <div class="event-info">
+          <h4>เวทีสนทนาประจำเดือน - นโยบายเศรษฐกิจ</h4>
+          <div class="event-meta"><span>🕑 14:00 น.</span><span>💻 Online</span><span>👥 4,500</span></div>
+        </div>
+        <button class="event-reg-btn" onclick="toast('ลงทะเบียนแล้ว!'); event.stopPropagation()">ลงทะเบียน</button>
+      </div>
+
+      <div style="height:16px"></div>
+    </div>
+
+    <!-- ====== NEWS PAGE ====== -->
+    <div class="page" id="page-news">
+      <div class="search-wrap">
+        <div class="search-box">
+          <span>🔍</span>
+          <input placeholder="ค้นหาข่าวสาร..." />
+        </div>
+      </div>
+      <div class="filter-tabs">
+        <div class="filter-tab active" onclick="setFilter(this)">ทั้งหมด</div>
+        <div class="filter-tab" onclick="setFilter(this)">ข่าวพรรค</div>
+        <div class="filter-tab" onclick="setFilter(this)">กิจกรรม</div>
+        <div class="filter-tab" onclick="setFilter(this)">บทความ</div>
+        <div class="filter-tab" onclick="setFilter(this)">แถลงการณ์</div>
+      </div>
+      <div class="news-list">
+        <div class="news-list-item" onclick="toast('เปิดข่าว')">
+          <div class="nli-thumb" style="background:linear-gradient(135deg,#e8f5e9,#a5d6a7)">🏙️</div>
+          <div class="nli-body">
+            <span class="nli-tag">ข่าวพรรค</span>
+            <div class="nli-title">พรรคความหวังใหม่ เปิดตัวนโยบายเศรษฐกิจฐานราษฎร</div>
+            <div class="nli-date">📅 20 พ.ค. 2569 · 👁️ 1,250 อ่าน</div>
+          </div>
+        </div>
+        <div class="news-list-item" onclick="toast('เปิดข่าว')">
+          <div class="nli-thumb" style="background:linear-gradient(135deg,#fff9c4,#fff176)">🎤</div>
+          <div class="nli-body">
+            <span class="nli-tag" style="background:#fff8e1;color:#f57c00">กิจกรรม</span>
+            <div class="nli-title">ลงพื้นที่รับฟังปัญหาประชาชน จังหวัดเชียงใหม่</div>
+            <div class="nli-date">📅 18 พ.ค. 2569 · 👁️ 890 อ่าน</div>
+          </div>
+        </div>
+        <div class="news-list-item" onclick="toast('เปิดข่าว')">
+          <div class="nli-thumb" style="background:linear-gradient(135deg,#b3e5fc,#81d4fa)">💨</div>
+          <div class="nli-body">
+            <span class="nli-tag">ข่าวพรรค</span>
+            <div class="nli-title">เสนอโมเดลพลังงานสะอาด เพื่ออนาคตที่ยั่งยืน</div>
+            <div class="nli-date">📅 15 พ.ค. 2569 · 👁️ 760 อ่าน</div>
+          </div>
+        </div>
+        <div class="news-list-item" onclick="toast('เปิดข่าว')">
+          <div class="nli-thumb" style="background:linear-gradient(135deg,#f3e5f5,#ce93d8)">🏛️</div>
+          <div class="nli-body">
+            <span class="nli-tag">ข่าวพรรค</span>
+            <div class="nli-title">เปิดตัวสาขาใหม่ ภาคเหนือ 12 จังหวัด</div>
+            <div class="nli-date">📅 8 พ.ค. 2569 · 👁️ 540 อ่าน</div>
+          </div>
+        </div>
+        <div class="news-list-item" onclick="toast('เปิดข่าว')">
+          <div class="nli-thumb" style="background:linear-gradient(135deg,#fce4ec,#f48fb1)">🤝</div>
+          <div class="nli-body">
+            <span class="nli-tag" style="background:#e3f2fd;color:#1565c0">บทความ</span>
+            <div class="nli-title">ความสำเร็จของโมเดลเศรษฐกิจฐานราก</div>
+            <div class="nli-date">📅 5 พ.ค. 2569 · 👁️ 320 อ่าน</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== EVENTS PAGE ====== -->
+    <div class="page" id="page-events">
+      <div style="padding:16px 16px 8px">
+        <div class="filter-tabs" style="padding:0 0 12px">
+          <div class="filter-tab active" onclick="setFilter(this)">กำลังจะมา</div>
+          <div class="filter-tab" onclick="setFilter(this)">ออนไลน์</div>
+          <div class="filter-tab" onclick="setFilter(this)">ที่ผ่านมา</div>
+        </div>
+      </div>
+      <div class="event-card" onclick="toast('รายละเอียดกิจกรรม')">
+        <div class="event-date-box">
+          <div class="day">15</div><div class="month">มิ.ย.</div>
+        </div>
+        <div class="event-info">
+          <h4>ประชุมใหญ่พรรคฯ ประจำปี 2569</h4>
+          <div class="event-meta"><span>🕘 09:00</span><span>📍 กรุงเทพฯ</span></div>
+        </div>
+        <button class="event-reg-btn" onclick="toast('ลงทะเบียนแล้ว!');event.stopPropagation()">ลงทะเบียน</button>
+      </div>
+      <div class="event-card" onclick="toast('รายละเอียดกิจกรรม')">
+        <div class="event-date-box" style="background:#1565c0">
+          <div class="day">25</div><div class="month">พ.ค.</div>
+        </div>
+        <div class="event-info">
+          <h4>เวทีสนทนา - นโยบายเศรษฐกิจ (Online)</h4>
+          <div class="event-meta"><span>🕑 14:00</span><span>💻 YouTube Live</span></div>
+        </div>
+        <button class="event-reg-btn" onclick="toast('ลงทะเบียนแล้ว!');event.stopPropagation()">ลงทะเบียน</button>
+      </div>
+      <div class="event-card" onclick="toast('รายละเอียดกิจกรรม')">
+        <div class="event-date-box" style="background:#7b1fa2">
+          <div class="day">22</div><div class="month">พ.ค.</div>
+        </div>
+        <div class="event-info">
+          <h4>โครงการอาสาสมัคร ฟื้นฟูชุมชน</h4>
+          <div class="event-meta"><span>🕗 08:00</span><span>📍 กรุงเทพฯ</span></div>
+        </div>
+        <button class="event-reg-btn" onclick="toast('ลงทะเบียนแล้ว!');event.stopPropagation()">ลงทะเบียน</button>
+      </div>
+      <div style="height:16px"></div>
+    </div>
+
+    <!-- ====== DONATE PAGE ====== -->
+    <div class="page" id="page-donate">
+      <div class="donate-page">
+        <div style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--primary)">💛 เลือกจำนวนเงิน</div>
+        <div class="donate-amounts">
+          <div class="amount-chip selected" onclick="selectAmount(this, 200)">200<br><sub>บาท</sub></div>
+          <div class="amount-chip" onclick="selectAmount(this, 500)">500<br><sub>บาท</sub></div>
+          <div class="amount-chip" onclick="selectAmount(this, 1000)">1,000<br><sub>บาท</sub></div>
+          <div class="amount-chip" onclick="selectAmount(this, 2000)">2,000<br><sub>บาท</sub></div>
+          <div class="amount-chip" onclick="selectAmount(this, 5000)">5,000<br><sub>บาท</sub></div>
+          <div class="amount-chip" onclick="selectAmount(this, 0)">อื่นๆ<br><sub>ระบุเอง</sub></div>
+        </div>
+
+        <div style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--primary)">📱 ช่องทางชำระเงิน</div>
+        <div class="pay-method-grid">
+          <div class="pay-method selected" onclick="selectPay(this)">
+            <div class="pm-icon">📱</div>
+            <div class="pm-name">PromptPay<br>พร้อมเพย์</div>
+          </div>
+          <div class="pay-method" onclick="selectPay(this)">
+            <div class="pm-icon">🏦</div>
+            <div class="pm-name">โอนธนาคาร</div>
+          </div>
+        </div>
+
+        <div class="qr-box">
+          <div class="qr">🟨<br>⬛🟨⬛<br>🟨</div>
+          <div class="qr-no">081-234-5678</div>
+          <div class="qr-name">พรรคความหวังใหม่</div>
+          <div style="font-size:12px;color:#aaa;margin-top:8px">สแกน QR หรือโอนเข้าเลขพร้อมเพย์</div>
+        </div>
+
+        <button style="width:100%;padding:16px;background:var(--primary);color:#fff;border:none;border-radius:var(--radius-sm);font-size:16px;font-family:'Sarabun',sans-serif;font-weight:700;cursor:pointer;" onclick="toast('📤 แนบสลิปการโอน')">
+          📎 แนบสลิปการโอน
+        </button>
+
+        <div style="margin-top:14px;background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);">
+          <div style="font-size:13px;font-weight:700;margin-bottom:10px;">🏦 โอนธนาคาร</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#555;">
+            <div style="display:flex;justify-content:space-between"><span>ธนาคาร</span><strong>กรุงไทย</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>ชื่อบัญชี</span><strong>พรรคความหวังใหม่</strong></div>
+            <div style="display:flex;justify-content:space-between"><span>เลขบัญชี</span><strong style="color:var(--primary)">123-4-56789-0</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== PROFILE PAGE ====== -->
+    <div class="page" id="page-profile">
+      <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-name">สมชาย ใจดี</div>
+        <div class="profile-id">NAP-2026-00001</div>
+        <div class="profile-badge">🌟 สมาชิกรายปี</div>
+      </div>
+
+      <!-- Digital Card -->
+      <div class="member-card">
+        <div class="member-card-top">
+          <div>
+            <div class="mc-party">พรรคความหวังใหม่</div>
+            <div class="mc-name-th">New Aspiration Party</div>
+          </div>
+          <div class="mc-chip">สมาชิก</div>
+        </div>
+        <div class="member-card-mid">
+          <div class="mc-member-name">สมชาย ใจดี</div>
+          <div class="mc-id">NAP-2026-00001</div>
+          <div class="mc-type">สมาชิกรายปี · กรุงเทพมหานคร</div>
+        </div>
+        <div class="member-card-bot">
+          <div>
+            <div class="mc-expire">หมดอายุ</div>
+            <div class="mc-expire"><strong>10 มกราคม 2570</strong></div>
+          </div>
+          <div class="mc-qr">
+            <div>▩</div>
+            <div class="mc-qr-label">QR Code</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <div class="profile-menu">
+        <div class="profile-menu-item" onclick="toast('ข้อมูลส่วนตัว')">
+          <div class="pmi-icon" style="background:#e8f5e9">👤</div>
+          <div class="pmi-text"><div class="pmi-title">ข้อมูลส่วนตัว</div><div class="pmi-sub">แก้ไขชื่อ เบอร์โทร อีเมล</div></div>
+          <span class="pmi-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="toast('ต่ออายุสมาชิก')">
+          <div class="pmi-icon" style="background:#fff8e1">🌟</div>
+          <div class="pmi-text"><div class="pmi-title">ต่ออายุสมาชิก</div><div class="pmi-sub">รายปี ฿200 · ตลอดชีพ ฿2,000</div></div>
+          <span class="pmi-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="toast('ประวัติการบริจาค')">
+          <div class="pmi-icon" style="background:#e3f2fd">💰</div>
+          <div class="pmi-text"><div class="pmi-title">ประวัติการบริจาค</div><div class="pmi-sub">ดูรายการทั้งหมด</div></div>
+          <span class="pmi-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="toast('กิจกรรมที่ลงทะเบียน')">
+          <div class="pmi-icon" style="background:#f3e5f5">📅</div>
+          <div class="pmi-text"><div class="pmi-title">กิจกรรมที่ลงทะเบียน</div><div class="pmi-sub">3 กิจกรรมที่กำลังจะมา</div></div>
+          <span class="pmi-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="toggleDark()">
+          <div class="pmi-icon" style="background:#1a1a1a">🌙</div>
+          <div class="pmi-text"><div class="pmi-title">Dark Mode</div><div class="pmi-sub">สลับธีมมืด/สว่าง</div></div>
+          <div class="toggle" id="darkToggle"></div>
+        </div>
+        <div class="profile-menu-item" onclick="toast('เปลี่ยนภาษา')">
+          <div class="pmi-icon" style="background:#e8f5e9">🌐</div>
+          <div class="pmi-text"><div class="pmi-title">ภาษา / Language</div><div class="pmi-sub">ไทย · English</div></div>
+          <span class="pmi-arrow">›</span>
+        </div>
+        <div class="profile-menu-item" onclick="toast('ออกจากระบบแล้ว')">
+          <div class="pmi-icon" style="background:#ffebee">🚪</div>
+          <div class="pmi-text"><div class="pmi-title" style="color:#e53935">ออกจากระบบ</div><div class="pmi-sub">admin@newaspirationparty.or.th</div></div>
+          <span class="pmi-arrow">›</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end pages -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a class="bn-item active" onclick="goPage('home')" id="bn-home">
+      <span class="bn-icon">🏠</span>
+      <span class="bn-label">หน้าแรก</span>
+    </a>
+    <a class="bn-item" onclick="goPage('news')" id="bn-news">
+      <span class="bn-icon">📰</span>
+      <span class="bn-label">ข่าวสาร</span>
+    </a>
+    <div class="bn-center" onclick="goPage('donate')">💛</div>
+    <a class="bn-item" onclick="goPage('events')" id="bn-events">
+      <span class="bn-icon">📅</span>
+      <span class="bn-label">กิจกรรม</span>
+    </a>
+    <a class="bn-item" onclick="goPage('profile')" id="bn-profile">
+      <span class="bn-icon">👤</span>
+      <span class="bn-label">โปรไฟล์</span>
+    </a>
+  </nav>
+
+</div><!-- end app -->
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // Splash
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    setTimeout(() => document.getElementById('splash').remove(), 600);
+  }, 1800);
+
+  // Navigation
+  const pageTitles = {
+    'home': 'หน้าแรก',
+    'news': 'ข่าวสาร',
+    'events': 'กิจกรรม',
+    'donate': 'บริจาคสนับสนุน',
+    'profile': 'โปรไฟล์ของฉัน',
+  };
+
+  function goPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.getElementById('pagesContainer').scrollTop = 0;
+
+    // Update bottom nav
+    document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+    const bn = document.getElementById('bn-' + id);
+    if (bn) bn.classList.add('active');
+
+    // Update topbar title
+    document.getElementById('pageTitle').textContent = pageTitles[id] || '';
+  }
+
+  // Filter tabs
+  function setFilter(el) {
+    el.closest('.filter-tabs').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Donate amounts
+  function selectAmount(el, amount) {
+    el.closest('.donate-amounts').querySelectorAll('.amount-chip').forEach(a => a.classList.remove('selected'));
+    el.classList.add('selected');
+    if (amount > 0) toast(`เลือกบริจาค ฿${amount.toLocaleString()}`);
+    else toast('ระบุจำนวนเงินเอง');
+  }
+
+  // Pay method
+  function selectPay(el) {
+    el.closest('.pay-method-grid').querySelectorAll('.pay-method').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // Dark mode
+  let darkMode = false;
+  function toggleDark() {
+    darkMode = !darkMode;
+    document.getElementById('darkToggle').classList.toggle('on', darkMode);
+    if (darkMode) {
+      document.documentElement.style.setProperty('--bg', '#1a1a1a');
+      document.documentElement.style.setProperty('--card', '#2a2a2a');
+      document.documentElement.style.setProperty('--text', '#eee');
+      document.documentElement.style.setProperty('--border', '#333');
+      document.documentElement.style.setProperty('--text-muted', '#aaa');
+      toast('🌙 Dark Mode เปิดแล้ว');
+    } else {
+      document.documentElement.style.setProperty('--bg', '#F4F6F4');
+      document.documentElement.style.setProperty('--card', '#fff');
+      document.documentElement.style.setProperty('--text', '#222');
+      document.documentElement.style.setProperty('--border', '#eee');
+      document.documentElement.style.setProperty('--text-muted', '#888');
+      toast('☀️ Light Mode เปิดแล้ว');
+    }
+  }
+
+  // Toast
+  function toast(msg) {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transition = 'opacity 0.3s';
+      setTimeout(() => t.remove(), 300);
+    }, 2500);
+  }
+</script>
+</body>
+</html>
