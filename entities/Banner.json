@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "cta_text": {
+      "type": "string"
+    },
+    "cta_url": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video"
+      ]
+    },
+    "position": {
+      "type": "string",
+      "enum": [
+        "hero",
+        "sidebar",
+        "footer",
+        "popup"
+      ]
+    },
+    "order": {
+      "type": "number"
+    },
+    "is_active": {
+      "type": "boolean"
+    },
+    "start_date": {
+      "type": "string"
+    },
+    "end_date": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Banner"
+}
