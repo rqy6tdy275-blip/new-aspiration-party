@@ -1,0 +1,67 @@
+{
+  "type": "object",
+  "properties": {
+    "party_name_th": {
+      "type": "string"
+    },
+    "party_name_en": {
+      "type": "string"
+    },
+    "slogan_th": {
+      "type": "string"
+    },
+    "slogan_en": {
+      "type": "string"
+    },
+    "logo_url": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "facebook": {
+      "type": "string"
+    },
+    "tiktok": {
+      "type": "string"
+    },
+    "instagram": {
+      "type": "string"
+    },
+    "youtube": {
+      "type": "string"
+    },
+    "line_oa": {
+      "type": "string"
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "bank_account_name": {
+      "type": "string"
+    },
+    "bank_account_no": {
+      "type": "string"
+    },
+    "promptpay_no": {
+      "type": "string"
+    },
+    "promptpay_qr_url": {
+      "type": "string"
+    },
+    "primary_color": {
+      "type": "string"
+    },
+    "secondary_color": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "PartySettings"
+}
