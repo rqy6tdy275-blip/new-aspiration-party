@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | พรรคความหวังใหม่</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0B7A33;
+      --primary-dark: #085c26;
+      --primary-light: #e8f5e9;
+      --secondary: #FFF04F;
+      --accent: #F5C400;
+      --danger: #e53935;
+      --warning: #f57c00;
+      --info: #1565c0;
+      --success: #2e7d32;
+      --dark: #1A1A1A;
+      --sidebar-w: 260px;
+      --topbar-h: 64px;
+      --bg: #F4F6F4;
+      --card: #fff;
+      --border: #e8ede8;
+      --text: #222;
+      --text-muted: #888;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --shadow-md: 0 4px 24px rgba(0,0,0,0.10);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; font-family:'Sarabun',sans-serif; color:var(--text); background:var(--bg); }
+
+    /* =================== LOGIN PAGE =================== */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0B7A33 0%, #1a8a40 50%, #085c26 100%);
+      padding: 20px;
+    }
+
+    .login-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo .logo-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #1a8a40);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 14px;
+      box-shadow: 0 4px 20px rgba(11,122,51,0.3);
+    }
+
+    .login-logo h2 { font-size: 20px; font-weight: 800; color: var(--primary); font-family: 'Kanit', sans-serif; }
+    .login-logo p { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .login-form h3 { font-size: 18px; font-weight: 700; margin-bottom: 24px; color: var(--dark); }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
+    .form-group input {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid #ddd; border-radius: var(--radius-sm);
+      font-family: 'Sarabun', sans-serif; font-size: 14px;
+      outline: none; transition: border 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11,122,51,0.1); }
+
+    .login-error {
+      background: #ffebee; color: #c62828; border: 1px solid #ffcdd2;
+      border-radius: var(--radius-sm); padding: 10px 14px;
+      font-size: 13px; margin-bottom: 16px; display: none;
+    }
+
+    .btn-login {
+      width: 100%; padding: 14px;
+      background: var(--primary); color: #fff;
+      border: none; border-radius: var(--radius-sm);
+      font-size: 16px; font-family: 'Sarabun', sans-serif;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(11,122,51,0.3);
+    }
+
+    .btn-login:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    .login-hint {
+      text-align: center; margin-top: 20px;
+      font-size: 12px; color: var(--text-muted);
+      background: #f9f9f9; padding: 10px; border-radius: 8px;
+    }
+
+    /* =================== APP LAYOUT =================== */
+    #app { display: none; height: 100vh; flex-direction: row; overflow: hidden; }
+    #app.visible { display: flex; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--dark);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      transition: transform 0.3s;
+      z-index: 200;
+    }
+
+    .sidebar-header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid #2a2a2a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-logo {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #1a8a40);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+
+    .sidebar-header .brand-th { font-size: 14px; font-weight: 700; color: #fff; font-family: 'Kanit', sans-serif; line-height: 1.2; }
+    .sidebar-header .brand-en { font-size: 10px; color: #666; }
+
+    .sidebar-admin-info {
+      padding: 14px 20px;
+      background: #1d1d1d;
+      border-bottom: 1px solid #2a2a2a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary); display: flex; align-items: center;
+      justify-content: center; font-size: 16px; flex-shrink: 0;
+    }
+
+    .admin-name { font-size: 13px; color: #ddd; font-weight: 600; }
+    .admin-role { font-size: 11px; color: #888; }
+
+    .sidebar-nav { padding: 12px 0; flex: 1; }
+
+    .nav-section-label {
+      font-size: 10px; font-weight: 700; color: #555;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 12px 20px 6px;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 20px;
+      color: #aaa; text-decoration: none; font-size: 14px;
+      font-weight: 500; cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid transparent;
+    }
+
+    .nav-item:hover { background: #1d1d1d; color: #fff; }
+    .nav-item.active { background: rgba(11,122,51,0.2); color: #4caf75; border-left-color: var(--primary); }
+    .nav-item .ni { font-size: 18px; width: 22px; text-align: center; flex-shrink: 0; }
+    .nav-item .nbadge {
+      margin-left: auto; background: var(--danger); color: #fff;
+      font-size: 10px; font-weight: 700; padding: 2px 7px;
+      border-radius: 20px; min-width: 20px; text-align: center;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .btn-logout {
+      display: flex; align-items: center; gap: 10px;
+      color: #888; font-size: 13px; cursor: pointer;
+      padding: 8px 0; transition: color 0.2s; text-decoration: none;
+    }
+
+    .btn-logout:hover { color: var(--danger); }
+
+    /* MAIN */
+    .main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      height: var(--topbar-h);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      flex-shrink: 0;
+      box-shadow: var(--shadow);
+      z-index: 100;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .page-title { font-size: 18px; font-weight: 700; color: var(--dark); font-family: 'Kanit', sans-serif; }
+    .page-subtitle { font-size: 12px; color: var(--text-muted); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-icon-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%; background: var(--bg);
+      border: none; cursor: pointer;
+      font-size: 18px; display: flex; align-items: center; justify-content: center;
+      position: relative; transition: background 0.2s;
+    }
+
+    .topbar-icon-btn:hover { background: var(--primary-light); }
+
+    .notif-dot {
+      position: absolute; top: 6px; right: 6px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--danger); border: 2px solid var(--card);
+    }
+
+    .topbar-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--primary); display: flex; align-items: center;
+      justify-content: center; font-size: 18px; cursor: pointer;
+    }
+
+    /* CONTENT */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px;
+    }
+
+    /* PAGE */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* STAT CARDS */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+    .stat-icon-box {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+
+    .stat-body { flex: 1; }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+    .stat-value { font-size: 28px; font-weight: 800; color: var(--dark); font-family: 'Kanit', sans-serif; line-height: 1; }
+    .stat-change { font-size: 12px; margin-top: 6px; font-weight: 600; }
+    .stat-change.up { color: var(--success); }
+    .stat-change.down { color: var(--danger); }
+
+    /* CHART AREA */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title { font-size: 16px; font-weight: 700; color: var(--dark); }
+    .card-title-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .card-badge {
+      font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: 20px;
+      background: var(--primary-light); color: var(--primary);
+    }
+
+    /* Simple chart bars */
+    .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding-top: 12px; }
+    .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+    .bar { width: 100%; border-radius: 4px 4px 0 0; transition: opacity 0.2s; min-height: 4px; }
+    .bar:hover { opacity: 0.8; }
+    .bar-label { font-size: 11px; color: var(--text-muted); }
+    .bar-val { font-size: 11px; font-weight: 700; color: var(--dark); }
+
+    /* Donut chart placeholder */
+    .donut-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+
+    .donut {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: conic-gradient(
+        var(--primary) 0% 45%,
+        var(--accent) 45% 70%,
+        var(--info) 70% 85%,
+        #e0e0e0 85% 100%
+      );
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+
+    .donut-center {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--card);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: var(--primary); font-family: 'Kanit',sans-serif;
+    }
+
+    .donut-legend { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #555; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-val { margin-left: auto; font-weight: 700; color: var(--dark); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; padding: 12px 14px;
+      font-size: 12px; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+      border-bottom: 2px solid var(--border);
+      background: #fafafa;
+    }
+    td { padding: 13px 14px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafff9; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+    }
+    .badge-success { background: #e8f5e9; color: #2e7d32; }
+    .badge-warning { background: #fff8e1; color: #f57c00; }
+    .badge-danger { background: #ffebee; color: #c62828; }
+    .badge-info { background: #e3f2fd; color: #1565c0; }
+    .badge-gray { background: #f5f5f5; color: #757575; }
+
+    /* ACTION BUTTONS */
+    .btn { 
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      font-size: 13px; font-family: 'Sarabun',sans-serif; font-weight: 600;
+      border: none; cursor: pointer; transition: all 0.2s; text-decoration: none;
+    }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(11,122,51,0.25); }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #c62828; }
+    .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-ghost:hover { background: var(--primary-light); }
+    .btn-gray { background: #f0f0f0; color: #555; }
+    .btn-gray:hover { background: #e0e0e0; }
+    .btn-accent { background: var(--accent); color: var(--dark); }
+    .btn-accent:hover { background: #e5b800; }
+
+    /* FORM */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+    .form-control {
+      padding: 10px 14px; border: 1.5px solid #ddd; border-radius: var(--radius-sm);
+      font-family: 'Sarabun',sans-serif; font-size: 14px; width: 100%;
+      outline: none; transition: border 0.2s;
+    }
+    .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11,122,51,0.08); }
+    .form-label { font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; display: block; }
+    .form-group-item { display: flex; flex-direction: column; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 500;
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border-radius: 16px;
+      padding: 28px; width: 100%; max-width: 560px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--dark); }
+    .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #aaa; transition: color 0.2s; }
+    .modal-close:hover { color: var(--danger); }
+    .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+    /* TOAST */
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: var(--dark); color: #fff; padding: 12px 18px;
+      border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 10px;
+      animation: slideIn 0.3s ease; min-width: 220px;
+    }
+    .toast.success { border-left: 4px solid #4caf50; }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.info { border-left: 4px solid var(--info); }
+    @keyframes slideIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+
+    /* SEARCH BAR */
+    .search-bar {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); padding: 8px 14px;
+      font-size: 14px; flex: 1; max-width: 300px;
+    }
+    .search-bar input { border: none; background: transparent; outline: none; font-family: 'Sarabun',sans-serif; font-size: 14px; flex: 1; }
+
+    /* TOOLBAR */
+    .toolbar {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+
+    /* AVATAR small */
+    .avatar-sm {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--primary-light); color: var(--primary);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* MEDIA GRID */
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+    .media-item {
+      background: var(--bg); border-radius: var(--radius-sm);
+      overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.2s;
+    }
+    .media-item:hover { border-color: var(--primary); }
+    .media-thumb { height: 100px; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+    .media-name { padding: 8px; font-size: 11px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* SETTINGS */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .settings-section { margin-bottom: 28px; }
+    .settings-section-title { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); display: flex; align-items: center; gap: 8px; }
+
+    /* ACTIVITY LOG */
+    .activity-list { display: flex; flex-direction: column; gap: 0; }
+    .activity-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .activity-body { flex: 1; }
+    .activity-text { font-size: 13px; color: var(--text); margin-bottom: 2px; }
+    .activity-time { font-size: 11px; color: var(--text-muted); }
+
+    /* PROGRESS BAR */
+    .progress-bar { height: 6px; background: #eee; border-radius: 3px; overflow: hidden; margin-top: 6px; }
+    .progress-fill { height: 100%; border-radius: 3px; background: var(--primary); transition: width 1s ease; }
+
+    /* QUICK ACTIONS */
+    .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+    .quick-action {
+      background: var(--card); border-radius: var(--radius);
+      padding: 18px; text-align: center; cursor: pointer;
+      box-shadow: var(--shadow); transition: all 0.2s; text-decoration: none;
+    }
+    .quick-action:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .qa-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+    .qa-label { font-size: 13px; font-weight: 600; color: var(--text); }
+
+    /* MOBILE SIDEBAR OVERLAY */
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 199; }
+
+    /* =================== RESPONSIVE =================== */
+    @media (max-width: 1024px) {
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-row { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: repeat(2, 1fr); }
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; top: 0; left: 0; bottom: 0;
+        transform: translateX(-100%);
+        z-index: 300;
+      }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+      .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .content { padding: 16px; }
+      .topbar { padding: 0 16px; }
+      .page-title { font-size: 16px; }
+      .quick-actions { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-row.triple { grid-template-columns: 1fr; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .search-bar { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .stat-card { padding: 14px; }
+      .stat-value { font-size: 22px; }
+      .quick-actions { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: #333; }
+  </style>
+</head>
+<body>
+
+<!-- =================== LOGIN =================== -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-circle">🌻</div>
+      <h2>พรรคความหวังใหม่</h2>
+      <p>ระบบจัดการหลังบ้าน | Admin Dashboard</p>
+    </div>
+    <div class="login-form">
+      <h3>เข้าสู่ระบบ</h3>
+      <div class="login-error" id="loginError">อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่</div>
+      <div class="form-group">
+        <label>อีเมล</label>
+        <input type="email" id="loginEmail" placeholder="admin@newaspirationparty.or.th" value="admin@newaspirationparty.or.th" />
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่าน</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" value="Admin@2026" />
+      </div>
+      <button class="btn-login" onclick="doLogin()">🔐 เข้าสู่ระบบ</button>
+      <div class="login-hint">
+        Demo: admin@newaspirationparty.or.th / Admin@2026
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== APP =================== -->
+<div id="app">
+
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🌻</div>
+      <div>
+        <div class="brand-th">พรรคความหวังใหม่</div>
+        <div class="brand-en">Admin Dashboard</div>
+      </div>
+    </div>
+
+    <div class="sidebar-admin-info">
+      <div class="admin-avatar">👤</div>
+      <div>
+        <div class="admin-name">Super Admin</div>
+        <div class="admin-role">admin@newaspirationparty.or.th</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">ภาพรวม</div>
+      <a class="nav-item active" onclick="navigate('dashboard')"><span class="ni">📊</span> Dashboard</a>
+
+      <div class="nav-section-label">จัดการเนื้อหา</div>
+      <a class="nav-item" onclick="navigate('banners')"><span class="ni">🖼️</span> จัดการแบนเนอร์</a>
+      <a class="nav-item" onclick="navigate('news')"><span class="ni">📰</span> ข่าวสาร & บทความ</a>
+      <a class="nav-item" onclick="navigate('policies')"><span class="ni">📋</span> นโยบายพรรค</a>
+      <a class="nav-item" onclick="navigate('events')"><span class="ni">📅</span> กิจกรรม</a>
+      <a class="nav-item" onclick="navigate('media')"><span class="ni">🗂️</span> Media Manager</a>
+
+      <div class="nav-section-label">สมาชิก & การเงิน</div>
+      <a class="nav-item" onclick="navigate('members')"><span class="ni">👥</span> สมาชิก <span class="nbadge">3</span></a>
+      <a class="nav-item" onclick="navigate('membership-plans')"><span class="ni">🌟</span> แผนสมาชิก</a>
+      <a class="nav-item" onclick="navigate('donations')"><span class="ni">💰</span> การบริจาค <span class="nbadge">2</span></a>
+
+      <div class="nav-section-label">อาสาสมัคร</div>
+      <a class="nav-item" onclick="navigate('volunteers')"><span class="ni">🙋</span> อาสาสมัคร</a>
+      <a class="nav-item" onclick="navigate('events-reg')"><span class="ni">📝</span> ลงทะเบียนกิจกรรม</a>
+
+      <div class="nav-section-label">ระบบ</div>
+      <a class="nav-item" onclick="navigate('settings')"><span class="ni">⚙️</span> ตั้งค่าพรรค</a>
+      <a class="nav-item" onclick="navigate('contacts')"><span class="ni">✉️</span> ข้อความติดต่อ <span class="nbadge">5</span></a>
+      <a class="nav-item" onclick="navigate('activity-log')"><span class="ni">📝</span> Activity Log</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a class="btn-logout" onclick="doLogout()">🚪 ออกจากระบบ</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-subtitle" id="pageSubtitle">ยินดีต้อนรับสู่ระบบจัดการพรรคความหวังใหม่</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-icon-btn" title="แจ้งเตือน">
+          🔔<span class="notif-dot"></span>
+        </button>
+        <button class="topbar-icon-btn" title="ดูเว็บไซต์" onclick="window.open('index.html','_blank')">🌐</button>
+        <div class="topbar-avatar" title="โปรไฟล์">👤</div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ========== DASHBOARD ========== -->
+      <div class="page active" id="page-dashboard">
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <a class="quick-action" onclick="navigate('news'); openModal('addNewsModal')">
+            <span class="qa-icon">✏️</span>
+            <div class="qa-label">เพิ่มข่าวใหม่</div>
+          </a>
+          <a class="quick-action" onclick="navigate('members')">
+            <span class="qa-icon">👥</span>
+            <div class="qa-label">อนุมัติสมาชิก</div>
+          </a>
+          <a class="quick-action" onclick="navigate('donations')">
+            <span class="qa-icon">💰</span>
+            <div class="qa-label">ตรวจสอบบริจาค</div>
+          </a>
+          <a class="quick-action" onclick="navigate('events')">
+            <span class="qa-icon">📅</span>
+            <div class="qa-label">สร้างกิจกรรม</div>
+          </a>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#e8f5e9">👥</div>
+            <div class="stat-body">
+              <div class="stat-label">สมาชิกทั้งหมด</div>
+              <div class="stat-value">50,234</div>
+              <div class="stat-change up">↑ +1,234 เดือนนี้</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#fff8e1">💰</div>
+            <div class="stat-body">
+              <div class="stat-label">ยอดบริจาค (เดือนนี้)</div>
+              <div class="stat-value">฿485K</div>
+              <div class="stat-change up">↑ +12% จากเดือนก่อน</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#e3f2fd">📰</div>
+            <div class="stat-body">
+              <div class="stat-label">ข่าวที่เผยแพร่</div>
+              <div class="stat-value">128</div>
+              <div class="stat-change up">↑ +8 สัปดาห์นี้</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#f3e5f5">🙋</div>
+            <div class="stat-body">
+              <div class="stat-label">อาสาสมัคร</div>
+              <div class="stat-value">3,521</div>
+              <div class="stat-change up">↑ +89 เดือนนี้</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">สมาชิกใหม่รายเดือน</div>
+                <div class="card-title-sub">ปี 2569</div>
+              </div>
+              <span class="card-badge">↑ 23% YoY</span>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-wrap">
+                <div class="bar-val">3.2K</div>
+                <div class="bar" style="height:65%; background:var(--primary); opacity:0.6;"></div>
+                <div class="bar-label">ม.ค.</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar-val">3.8K</div>
+                <div class="bar" style="height:75%; background:var(--primary); opacity:0.7;"></div>
+                <div class="bar-label">ก.พ.</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar-val">4.1K</div>
+                <div class="bar" style="height:82%; background:var(--primary); opacity:0.75;"></div>
+                <div class="bar-label">มี.ค.</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar-val">3.5K</div>
+                <div class="bar" style="height:70%; background:var(--primary); opacity:0.7;"></div>
+                <div class="bar-label">เม.ย.</div>
+              </div>
+              <div class="bar-wrap">
+                <div class="bar-val">5.0K</div>
+                <div class="bar" style="height:100%; background:var(--primary);"></div>
+                <div class="bar-label">พ.ค.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">ประเภทสมาชิก</div>
+                <div class="card-title-sub">สัดส่วนปัจจุบัน</div>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut">
+                <div class="donut-center">
+                  <div style="font-size:11px; color:#aaa;">ทั้งหมด</div>
+                  50K
+                </div>
+              </div>
+              <div class="donut-legend">
+                <div class="legend-item"><span class="legend-dot" style="background:var(--primary)"></span> รายปี <span class="legend-val">45%</span></div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--accent)"></span> ตลอดชีพ <span class="legend-val">25%</span></div>
+                <div class="legend-item"><span class="legend-dot" style="background:var(--info)"></span> รอการอนุมัติ <span class="legend-val">15%</span></div>
+                <div class="legend-item"><span class="legend-dot" style="background:#e0e0e0"></span> หมดอายุ <span class="legend-val">15%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tables Row -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+          <!-- Recent Members -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">สมาชิกรอการอนุมัติ</div>
+              <button class="btn btn-sm btn-primary" onclick="navigate('members')">ดูทั้งหมด</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ชื่อ</th><th>ประเภท</th><th>สถานะ</th><th></th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm">ธ</div>ธนศักดิ์ มีชัย</div></td>
+                    <td>รายปี</td>
+                    <td><span class="badge badge-warning">⏳ รอ</span></td>
+                    <td><button class="btn btn-sm btn-primary" onclick="showToast('อนุมัติแล้ว','success')">อนุมัติ</button></td>
+                  </tr>
+                  <tr>
+                    <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm" style="background:#fff8e1;color:#f57c00">ป</div>ปรภาวดี พวงพิศ</div></td>
+                    <td>รายปี</td>
+                    <td><span class="badge badge-warning">⏳ รอ</span></td>
+                    <td><button class="btn btn-sm btn-primary" onclick="showToast('อนุมัติแล้ว','success')">อนุมัติ</button></td>
+                  </tr>
+                  <tr>
+                    <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm" style="background:#e3f2fd;color:#1565c0">ว</div>วิภาวี แสงทอง</div></td>
+                    <td>ตลอดชีพ</td>
+                    <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                    <td><button class="btn btn-sm btn-gray">ดู</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Recent Donations -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">การบริจาคล่าสุด</div>
+              <button class="btn btn-sm btn-primary" onclick="navigate('donations')">ดูทั้งหมด</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ผู้บริจาค</th><th>จำนวน</th><th>สถานะ</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>สมชาย ใจดี</td>
+                    <td>฿5,000</td>
+                    <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  </tr>
+                  <tr>
+                    <td>บริษัท สีเขียว จก.</td>
+                    <td>฿50,000</td>
+                    <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  </tr>
+                  <tr>
+                    <td>ปรภาวดี พวงพิศ</td>
+                    <td>฿1,000</td>
+                    <td><span class="badge badge-warning">⏳ รอตรวจ</span></td>
+                  </tr>
+                  <tr>
+                    <td>วิภาวี แสงทอง</td>
+                    <td>฿2,000</td>
+                    <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Log (recent) -->
+        <div class="card" style="margin-top:20px">
+          <div class="card-header">
+            <div class="card-title">กิจกรรมล่าสุด</div>
+            <button class="btn btn-sm btn-ghost" onclick="navigate('activity-log')">ดูทั้งหมด</button>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#e8f5e9">✅</div>
+              <div class="activity-body">
+                <div class="activity-text"><strong>อนุมัติสมาชิก</strong> — วิภาวี แสงทอง (สมาชิกตลอดชีพ)</div>
+                <div class="activity-time">🕐 เมื่อ 5 นาทีที่แล้ว · โดย Admin</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#fff8e1">📰</div>
+              <div class="activity-body">
+                <div class="activity-text"><strong>เผยแพร่ข่าว</strong> — "พรรคความหวังใหม่ เปิดตัวนโยบายเศรษฐกิจฐานราษฎร"</div>
+                <div class="activity-time">🕐 เมื่อ 1 ชั่วโมงที่แล้ว · โดย Editor</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon" style="background:#e3f2fd">💰</div>
+              <div class="activity-body">
+                <div class="activity-text"><strong>รับบริจาค</strong> — บริษัท สีเขียว จก. ฿50,000</div>
+                <div class="activity-time">🕐 เมื่อ 3 ชั่วโมงที่แล้ว · ระบบอัตโนมัติ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== MEMBERS ========== -->
+      <div class="page" id="page-members">
+        <div class="toolbar">
+          <div class="search-bar"><span>🔍</span><input placeholder="ค้นหาสมาชิก..." /></div>
+          <select class="form-control" style="width:auto">
+            <option>ทุกสถานะ</option><option>รอการอนุมัติ</option><option>อนุมัติแล้ว</option><option>หมดอายุ</option>
+          </select>
+          <select class="form-control" style="width:auto">
+            <option>ทุกประเภท</option><option>รายปี</option><option>ตลอดชีพ</option>
+          </select>
+          <button class="btn btn-primary" onclick="openModal('addMemberModal')">➕ เพิ่มสมาชิก</button>
+          <button class="btn btn-ghost">📥 Export Excel</button>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">รายชื่อสมาชิก <span style="font-size:13px;color:#aaa;font-weight:400">(50,234 คน)</span></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>รหัสสมาชิก</th><th>ชื่อ-สกุล</th><th>จังหวัด</th>
+                  <th>ประเภท</th><th>สถานะ</th><th>วันหมดอายุ</th><th>จัดการ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>NAP-2026-00001</strong></td>
+                  <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm">ส</div><div><div>สมชาย ใจดี</div><div style="font-size:11px;color:#aaa">081-234-5678</div></div></div></td>
+                  <td>กรุงเทพฯ</td><td>รายปี</td>
+                  <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  <td>10 ม.ค. 2570</td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-gray" onclick="showToast('ดูข้อมูลสมาชิก','info')">👁️</button>
+                    <button class="btn btn-sm btn-ghost">✏️</button>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('สมาชิก')">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>NAP-2026-00002</strong></td>
+                  <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm" style="background:#fff8e1;color:#f57c00">ว</div><div><div>วิภาวี แสงทอง</div><div style="font-size:11px;color:#aaa">089-876-5432</div></div></div></td>
+                  <td>เชียงใหม่</td><td>ตลอดชีพ</td>
+                  <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  <td>ตลอดชีพ</td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-gray">👁️</button>
+                    <button class="btn btn-sm btn-ghost">✏️</button>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('สมาชิก')">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>NAP-2026-00003</strong></td>
+                  <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm" style="background:#e3f2fd;color:#1565c0">ธ</div><div><div>ธนศักดิ์ มีชัย</div><div style="font-size:11px;color:#aaa">062-345-6789</div></div></div></td>
+                  <td>ขอนแก่น</td><td>รายปี</td>
+                  <td><span class="badge badge-warning">⏳ รอ</span></td>
+                  <td>-</td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-primary" onclick="showToast('อนุมัติสมาชิกแล้ว','success')">✅ อนุมัติ</button>
+                    <button class="btn btn-sm btn-danger" onclick="showToast('ปฏิเสธแล้ว','error')">❌</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>NAP-2026-00004</strong></td>
+                  <td><div style="display:flex;align-items:center;gap:8px"><div class="avatar-sm" style="background:#f3e5f5;color:#7b1fa2">ป</div><div><div>ปรภาวดี พวงพิศ</div><div style="font-size:11px;color:#aaa">095-111-2222</div></div></div></td>
+                  <td>สงขลา</td><td>รายปี</td>
+                  <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  <td>15 มี.ค. 2570</td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-gray">👁️</button>
+                    <button class="btn btn-sm btn-ghost">✏️</button>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('สมาชิก')">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== DONATIONS ========== -->
+      <div class="page" id="page-donations">
+        <div class="toolbar">
+          <div class="search-bar"><span>🔍</span><input placeholder="ค้นหาการบริจาค..." /></div>
+          <select class="form-control" style="width:auto"><option>ทุกสถานะ</option><option>รอตรวจสอบ</option><option>อนุมัติแล้ว</option></select>
+          <button class="btn btn-ghost">📥 Export CSV</button>
+          <button class="btn btn-ghost">📄 รายงาน PDF</button>
+        </div>
+
+        <!-- Summary -->
+        <div class="stat-grid" style="margin-bottom:20px">
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#e8f5e9">✅</div>
+            <div class="stat-body"><div class="stat-label">อนุมัติแล้ว</div><div class="stat-value">฿58,000</div><div class="stat-change up">3 รายการ</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#fff8e1">⏳</div>
+            <div class="stat-body"><div class="stat-label">รอตรวจสอบ</div><div class="stat-value">฿1,000</div><div class="stat-change">1 รายการ</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#e3f2fd">📊</div>
+            <div class="stat-body"><div class="stat-label">รวมทั้งหมด</div><div class="stat-value">฿59,000</div><div class="stat-change up">4 รายการ</div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon-box" style="background:#f3e5f5">📈</div>
+            <div class="stat-body"><div class="stat-label">เฉลี่ยต่อราย</div><div class="stat-value">฿14,750</div><div class="stat-change up">↑ จากเดือนก่อน</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">รายการบริจาค</div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ผู้บริจาค</th><th>จำนวน</th><th>ช่องทาง</th><th>วันที่</th><th>อ้างอิง</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>สมชาย ใจดี</td>
+                  <td><strong>฿5,000</strong></td>
+                  <td>PromptPay</td>
+                  <td>1 พ.ค. 2569</td>
+                  <td style="font-size:12px;color:#aaa">TXN20260501001</td>
+                  <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  <td><button class="btn btn-sm btn-ghost" onclick="showToast('ออกใบเสร็จแล้ว','success')">🧾 ใบเสร็จ</button></td>
+                </tr>
+                <tr>
+                  <td>วิภาวี แสงทอง</td>
+                  <td><strong>฿2,000</strong></td>
+                  <td>โอนธนาคาร</td>
+                  <td>2 พ.ค. 2569</td>
+                  <td style="font-size:12px;color:#aaa">TXN20260502001</td>
+                  <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  <td><button class="btn btn-sm btn-ghost" onclick="showToast('ออกใบเสร็จแล้ว','success')">🧾 ใบเสร็จ</button></td>
+                </tr>
+                <tr>
+                  <td>บริษัท สีเขียว จก.</td>
+                  <td><strong style="color:var(--primary)">฿50,000</strong></td>
+                  <td>โอนธนาคาร</td>
+                  <td>3 พ.ค. 2569</td>
+                  <td style="font-size:12px;color:#aaa">TXN20260503001</td>
+                  <td><span class="badge badge-success">✅ อนุมัติ</span></td>
+                  <td><button class="btn btn-sm btn-ghost" onclick="showToast('ออกใบเสร็จแล้ว','success')">🧾 ใบเสร็จ</button></td>
+                </tr>
+                <tr>
+                  <td>ปรภาวดี พวงพิศ</td>
+                  <td><strong>฿1,000</strong></td>
+                  <td>PromptPay</td>
+                  <td>10 พ.ค. 2569</td>
+                  <td style="font-size:12px;color:#aaa">TXN20260510001</td>
+                  <td><span class="badge badge-warning">⏳ รอตรวจ</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-primary" onclick="showToast('อนุมัติการบริจาคแล้ว','success')">✅ อนุมัติ</button>
+                    <button class="btn btn-sm btn-danger" onclick="showToast('ปฏิเสธแล้ว','error')">❌</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== NEWS ========== -->
+      <div class="page" id="page-news">
+        <div class="toolbar">
+          <div class="search-bar"><span>🔍</span><input placeholder="ค้นหาข่าวสาร..." /></div>
+          <select class="form-control" style="width:auto"><option>ทุกหมวด</option><option>ข่าวพรรค</option><option>กิจกรรม</option><option>บทความ</option></select>
+          <select class="form-control" style="width:auto"><option>ทุกสถานะ</option><option>เผยแพร่</option><option>แบบร่าง</option></select>
+          <button class="btn btn-primary" onclick="openModal('addNewsModal')">➕ เพิ่มข่าวใหม่</button>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">ข่าวสาร & บทความ <span style="font-size:13px;color:#aaa;font-weight:400">(128 รายการ)</span></div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>หัวข้อ</th><th>หมวด</th><th>ผู้เขียน</th><th>วันที่</th><th>ยอดอ่าน</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">พรรคความหวังใหม่ เปิดตัวนโยบายเศรษฐกิจฐานราษฎร</div></td>
+                  <td><span class="badge badge-info">ข่าวพรรค</span></td>
+                  <td>ฝ่ายประชาสัมพันธ์</td>
+                  <td>15 พ.ค. 2569</td>
+                  <td>1,250</td>
+                  <td><span class="badge badge-success">✅ เผยแพร่</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-ghost">✏️</button>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('ข่าว')">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ลงพื้นที่รับฟังปัญหาประชาชน จังหวัดเชียงใหม่</div></td>
+                  <td><span class="badge badge-warning">กิจกรรม</span></td>
+                  <td>ทีมลงพื้นที่</td>
+                  <td>12 พ.ค. 2569</td>
+                  <td>890</td>
+                  <td><span class="badge badge-success">✅ เผยแพร่</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-ghost">✏️</button>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('ข่าว')">🗑️</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">แผนพัฒนาเศรษฐกิจดิจิทัลสำหรับ SME ไทย</div></td>
+                  <td><span class="badge badge-info">บทความ</span></td>
+                  <td>ทีมนโยบาย</td>
+                  <td>10 พ.ค. 2569</td>
+                  <td>-</td>
+                  <td><span class="badge badge-gray">📝 แบบร่าง</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-primary" onclick="showToast('เผยแพร่แล้ว','success')">🚀 เผยแพร่</button>
+                    <button class="btn btn-sm btn-ghost">✏️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SETTINGS ========== -->
+      <div class="page" id="page-settings">
+        <div class="settings-grid">
+          <div>
+            <div class="settings-section">
+              <div class="settings-section-title">🌻 ข้อมูลพรรค</div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">ชื่อพรรค (ภาษาไทย)</label><input class="form-control" value="พรรคความหวังใหม่" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">ชื่อพรรค (ภาษาอังกฤษ)</label><input class="form-control" value="New Aspiration Party" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">สโลแกน</label><input class="form-control" value="ร่วมสร้างความหวังใหม่ เพื่ออนาคตที่ดีกว่า" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">ที่อยู่</label><textarea class="form-control" rows="3">123 ถนนประชาธิปไตย แขวงพลับพลา เขตวังทองหลาง กรุงเทพมหานคร 10310</textarea></div></div>
+              <div class="form-row"><div class="form-group-item"><label class="form-label">โทรศัพท์</label><input class="form-control" value="02-123-4567" /></div><div class="form-group-item"><label class="form-label">อีเมล</label><input class="form-control" value="contact@newaspirationparty.or.th" /></div></div>
+            </div>
+            <div class="settings-section">
+              <div class="settings-section-title">🎨 สี Brand</div>
+              <div class="form-row"><div class="form-group-item"><label class="form-label">สีหลัก</label><input class="form-control" type="color" value="#0B7A33" style="height:42px;padding:4px;" /></div><div class="form-group-item"><label class="form-label">สีรอง</label><input class="form-control" type="color" value="#FFF04F" style="height:42px;padding:4px;" /></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="settings-section">
+              <div class="settings-section-title">📱 Social Media</div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">Facebook</label><input class="form-control" value="https://facebook.com/NewAspirationParty" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">TikTok</label><input class="form-control" value="https://tiktok.com/@newaspirationparty" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">Instagram</label><input class="form-control" value="https://instagram.com/newaspirationparty" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">YouTube</label><input class="form-control" value="https://youtube.com/@newaspirationparty" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">LINE OA</label><input class="form-control" value="@newaspiration" /></div></div>
+            </div>
+            <div class="settings-section">
+              <div class="settings-section-title">🏦 บัญชีธนาคาร</div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">ธนาคาร</label><select class="form-control"><option selected>กรุงไทย</option><option>กสิกรไทย</option><option>ไทยพาณิชย์</option><option>กรุงเทพ</option></select></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">ชื่อบัญชี</label><input class="form-control" value="พรรคความหวังใหม่" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">เลขบัญชี</label><input class="form-control" value="123-4-56789-0" /></div></div>
+              <div class="form-row single"><div class="form-group-item"><label class="form-label">เลขพร้อมเพย์</label><input class="form-control" value="0812345678" /></div></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:8px;">
+          <button class="btn btn-primary" onclick="showToast('บันทึกการตั้งค่าเรียบร้อย','success')">💾 บันทึกการตั้งค่า</button>
+          <button class="btn btn-gray">↩️ ยกเลิก</button>
+        </div>
+      </div>
+
+      <!-- ========== CONTACTS ========== -->
+      <div class="page" id="page-contacts">
+        <div class="toolbar">
+          <div class="search-bar"><span>🔍</span><input placeholder="ค้นหาข้อความ..." /></div>
+          <select class="form-control" style="width:auto"><option>ทุกสถานะ</option><option>ใหม่</option><option>อ่านแล้ว</option><option>ตอบแล้ว</option></select>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">ข้อความติดต่อ <span style="font-size:13px;color:#aaa;font-weight:400">(5 ข้อความใหม่)</span></div></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ชื่อ</th><th>อีเมล</th><th>หัวข้อ</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>อนุวัฒน์ รักชาติ</td>
+                  <td>anuwat@email.com</td>
+                  <td>สอบถามการสมัครสมาชิก</td>
+                  <td>15 พ.ค. 2569</td>
+                  <td><span class="badge badge-danger">🔴 ใหม่</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-primary" onclick="showToast('เปิดข้อความ','info')">📩 ตอบกลับ</button>
+                    <button class="btn btn-sm btn-gray" onclick="showToast('ทำเครื่องหมายอ่านแล้ว','success')">✅</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>สุพิชชา ไทยดี</td>
+                  <td>supitcha@email.com</td>
+                  <td>ต้องการบริจาคสนับสนุน</td>
+                  <td>14 พ.ค. 2569</td>
+                  <td><span class="badge badge-danger">🔴 ใหม่</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-primary" onclick="showToast('เปิดข้อความ','info')">📩 ตอบกลับ</button>
+                    <button class="btn btn-sm btn-gray">✅</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>ธีระชัย เพชรน้ำ</td>
+                  <td>thirachai@email.com</td>
+                  <td>สมัครอาสาสมัคร</td>
+                  <td>13 พ.ค. 2569</td>
+                  <td><span class="badge badge-info">👁️ อ่านแล้ว</span></td>
+                  <td style="display:flex;gap:6px">
+                    <button class="btn btn-sm btn-ghost">📩 ตอบกลับ</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== MEDIA ========== -->
+      <div class="page" id="page-media">
+        <div class="toolbar">
+          <button class="btn btn-primary">📤 อัปโหลดไฟล์</button>
+          <select class="form-control" style="width:auto"><option>ทุกประเภท</option><option>รูปภาพ</option><option>วิดีโอ</option><option>PDF</option></select>
+          <div class="search-bar"><span>🔍</span><input placeholder="ค้นหาไฟล์..." /></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Media Manager</div><div style="font-size:13px;color:#aaa">ใช้พื้นที่ 1.2 GB / 10 GB</div></div>
+          <div class="progress-bar" style="margin-bottom:20px"><div class="progress-fill" style="width:12%"></div></div>
+          <div class="media-grid">
+            <div class="media-item"><div class="media-thumb">🌻</div><div class="media-name">sunflower-hero.jpg</div></div>
+            <div class="media-item"><div class="media-thumb">📰</div><div class="media-name">news-cover-1.jpg</div></div>
+            <div class="media-item"><div class="media-thumb">🏛️</div><div class="media-name">event-convention.jpg</div></div>
+            <div class="media-item"><div class="media-thumb">📄</div><div class="media-name">policy-economy.pdf</div></div>
+            <div class="media-item"><div class="media-thumb">🎥</div><div class="media-name">party-intro.mp4</div></div>
+            <div class="media-item"><div class="media-thumb">🖼️</div><div class="media-name">banner-main.jpg</div></div>
+            <div class="media-item"><div class="media-thumb">📋</div><div class="media-name">membership-form.pdf</div></div>
+            <div class="media-item"><div class="media-thumb" style="background:var(--primary-light);color:var(--primary);font-size:24px;">➕</div><div class="media-name">อัปโหลดใหม่</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== ACTIVITY LOG ========== -->
+      <div class="page" id="page-activity-log">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Activity Log</div><button class="btn btn-sm btn-ghost">📥 Export Log</button></div>
+          <div class="activity-list">
+            <div class="activity-item"><div class="activity-icon" style="background:#e8f5e9">✅</div><div class="activity-body"><div class="activity-text"><strong>อนุมัติสมาชิก</strong> — วิภาวี แสงทอง (NAP-2026-00002)</div><div class="activity-time">📅 15 พ.ค. 2569 · 11:30 น. · โดย Super Admin</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#e3f2fd">📰</div><div class="activity-body"><div class="activity-text"><strong>เผยแพร่ข่าว</strong> — "พรรคความหวังใหม่ เปิดตัวนโยบายเศรษฐกิจ..."</div><div class="activity-time">📅 15 พ.ค. 2569 · 10:15 น. · โดย Editor</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#fff8e1">💰</div><div class="activity-body"><div class="activity-text"><strong>รับบริจาค</strong> — บริษัท สีเขียว จก. ฿50,000 (อนุมัติอัตโนมัติ)</div><div class="activity-time">📅 15 พ.ค. 2569 · 09:00 น. · ระบบ</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#f3e5f5">⚙️</div><div class="activity-body"><div class="activity-text"><strong>แก้ไขการตั้งค่า</strong> — อัปเดตข้อมูลบัญชีธนาคาร</div><div class="activity-time">📅 14 พ.ค. 2569 · 16:45 น. · โดย Super Admin</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#ffebee">🗑️</div><div class="activity-body"><div class="activity-text"><strong>ลบแบนเนอร์</strong> — "แบนเนอร์หาเสียง Q1 2569"</div><div class="activity-time">📅 14 พ.ค. 2569 · 14:20 น. · โดย Admin</div></div></div>
+            <div class="activity-item"><div class="activity-icon" style="background:#e8f5e9">🔐</div><div class="activity-body"><div class="activity-text"><strong>เข้าสู่ระบบ</strong> — IP: 203.xxx.xxx.xxx · Browser: Chrome</div><div class="activity-time">📅 14 พ.ค. 2569 · 08:00 น. · Super Admin</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other pages placeholder -->
+      <div class="page" id="page-banners"><div class="card"><div class="card-header"><div class="card-title">จัดการแบนเนอร์</div><button class="btn btn-primary" onclick="showToast('เพิ่มแบนเนอร์','info')">➕ เพิ่มแบนเนอร์</button></div><p style="color:#aaa;padding:40px;text-align:center">ระบบจัดการแบนเนอร์พร้อมใช้งาน</p></div></div>
+      <div class="page" id="page-policies"><div class="card"><div class="card-header"><div class="card-title">นโยบายพรรค</div><button class="btn btn-primary">➕ เพิ่มนโยบาย</button></div><p style="color:#aaa;padding:40px;text-align:center">ระบบจัดการนโยบายพร้อมใช้งาน</p></div></div>
+      <div class="page" id="page-events"><div class="card"><div class="card-header"><div class="card-title">กิจกรรม</div><button class="btn btn-primary">➕ สร้างกิจกรรม</button></div><p style="color:#aaa;padding:40px;text-align:center">ระบบจัดการกิจกรรมพร้อมใช้งาน</p></div></div>
+      <div class="page" id="page-membership-plans"><div class="card"><div class="card-header"><div class="card-title">แผนสมาชิก</div></div><div class="table-wrap"><table><thead><tr><th>ชื่อแผน</th><th>ประเภท</th><th>ราคา</th><th>ระยะเวลา</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody><tr><td>สมาชิกรายปี</td><td>Annual</td><td><strong>฿200</strong></td><td>12 เดือน</td><td><span class="badge badge-success">✅ เปิดใช้</span></td><td><button class="btn btn-sm btn-ghost">✏️ แก้ไข</button></td></tr><tr><td>สมาชิกตลอดชีพ</td><td>Lifetime</td><td><strong>฿2,000</strong></td><td>ตลอดชีพ</td><td><span class="badge badge-success">✅ เปิดใช้</span></td><td><button class="btn btn-sm btn-ghost">✏️ แก้ไข</button></td></tr></tbody></table></div></div></div>
+      <div class="page" id="page-volunteers"><div class="card"><div class="card-header"><div class="card-title">อาสาสมัคร</div></div><p style="color:#aaa;padding:40px;text-align:center">ระบบจัดการอาสาสมัครพร้อมใช้งาน</p></div></div>
+      <div class="page" id="page-events-reg"><div class="card"><div class="card-header"><div class="card-title">ลงทะเบียนกิจกรรม</div></div><p style="color:#aaa;padding:40px;text-align:center">ระบบลงทะเบียนและ QR Check-in พร้อมใช้งาน</p></div></div>
+
+    </div><!-- end content -->
+  </div><!-- end main-area -->
+</div><!-- end app -->
+
+<!-- =================== MODALS =================== -->
+<!-- Add News Modal -->
+<div class="modal-overlay" id="addNewsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ เพิ่มข่าวสาร</div>
+      <button class="modal-close" onclick="closeModal('addNewsModal')">×</button>
+    </div>
+    <div class="form-row single"><div class="form-group-item"><label class="form-label">หัวข้อ (ภาษาไทย)</label><input class="form-control" placeholder="หัวข้อข่าว..." /></div></div>
+    <div class="form-row single"><div class="form-group-item"><label class="form-label">หัวข้อ (English)</label><input class="form-control" placeholder="News title..." /></div></div>
+    <div class="form-row">
+      <div class="form-group-item"><label class="form-label">หมวดหมู่</label><select class="form-control"><option>ข่าวพรรค</option><option>กิจกรรม</option><option>บทความ</option><option>แถลงการณ์</option></select></div>
+      <div class="form-group-item"><label class="form-label">สถานะ</label><select class="form-control"><option>แบบร่าง</option><option>เผยแพร่</option></select></div>
+    </div>
+    <div class="form-row single"><div class="form-group-item"><label class="form-label">เนื้อหา</label><textarea class="form-control" rows="5" placeholder="เนื้อหาข่าว..."></textarea></div></div>
+    <div class="form-row single"><div class="form-group-item"><label class="form-label">รูปปก</label><input class="form-control" type="file" accept="image/*" /></div></div>
+    <div class="modal-footer">
+      <button class="btn btn-gray" onclick="closeModal('addNewsModal')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="closeModal('addNewsModal');showToast('บันทึกข่าวแล้ว','success')">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Member Modal -->
+<div class="modal-overlay" id="addMemberModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">➕ เพิ่มสมาชิก</div>
+      <button class="modal-close" onclick="closeModal('addMemberModal')">×</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group-item"><label class="form-label">ชื่อ</label><input class="form-control" placeholder="ชื่อ..." /></div>
+      <div class="form-group-item"><label class="form-label">นามสกุล</label><input class="form-control" placeholder="นามสกุล..." /></div>
+    </div>
+    <div class="form-row single"><div class="form-group-item"><label class="form-label">เลขบัตรประชาชน</label><input class="form-control" placeholder="1-xxxx-xxxxx-xx-x" /></div></div>
+    <div class="form-row">
+      <div class="form-group-item"><label class="form-label">เบอร์โทร</label><input class="form-control" placeholder="0xx-xxx-xxxx" /></div>
+      <div class="form-group-item"><label class="form-label">อีเมล</label><input class="form-control" placeholder="email@..." type="email" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group-item"><label class="form-label">จังหวัด</label><select class="form-control"><option>กรุงเทพมหานคร</option><option>เชียงใหม่</option><option>ขอนแก่น</option><option>สงขลา</option></select></div>
+      <div class="form-group-item"><label class="form-label">ประเภทสมาชิก</label><select class="form-control"><option>รายปี (฿200)</option><option>ตลอดชีพ (฿2,000)</option></select></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-gray" onclick="closeModal('addMemberModal')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="closeModal('addMemberModal');showToast('เพิ่มสมาชิกแล้ว','success')">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- =================== SCRIPTS =================== -->
+<script>
+  // ---- Auth ----
+  const ADMIN_EMAIL = 'admin@newaspirationparty.or.th';
+  const ADMIN_PASS = 'Admin@2026';
+
+  function doLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPassword').value;
+    const err = document.getElementById('loginError');
+    if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      err.style.display = 'none';
+    } else {
+      err.style.display = 'block';
+    }
+  }
+
+  document.getElementById('loginPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  function doLogout() {
+    document.getElementById('app').classList.remove('visible');
+    document.getElementById('loginPage').style.display = 'flex';
+  }
+
+  // ---- Navigation ----
+  const pageTitles = {
+    'dashboard': ['Dashboard', 'ยินดีต้อนรับสู่ระบบจัดการพรรคความหวังใหม่'],
+    'members': ['จัดการสมาชิก', 'อนุมัติ จัดการ และดูข้อมูลสมาชิกทั้งหมด'],
+    'donations': ['การบริจาค', 'ตรวจสอบและอนุมัติการบริจาคสนับสนุน'],
+    'news': ['ข่าวสาร & บทความ', 'จัดการเนื้อหาข่าวสารและบทความ'],
+    'policies': ['นโยบายพรรค', 'จัดการนโยบายและแผนงานพรรค'],
+    'events': ['กิจกรรม', 'จัดการกิจกรรมและการลงทะเบียน'],
+    'banners': ['จัดการแบนเนอร์', 'อัปเดตแบนเนอร์และสื่อโฆษณา'],
+    'media': ['Media Manager', 'จัดการรูปภาพ วิดีโอ และเอกสาร'],
+    'settings': ['ตั้งค่าพรรค', 'แก้ไขข้อมูลพรรคและการตั้งค่าระบบ'],
+    'contacts': ['ข้อความติดต่อ', 'ตอบกลับข้อความจากประชาชน'],
+    'activity-log': ['Activity Log', 'ประวัติการทำงานของผู้ดูแลระบบ'],
+    'volunteers': ['อาสาสมัคร', 'จัดการและติดตามอาสาสมัครพรรค'],
+    'membership-plans': ['แผนสมาชิก', 'จัดการและกำหนดราคาแผนสมาชิก'],
+    'events-reg': ['ลงทะเบียนกิจกรรม', 'ดูการลงทะเบียนและ QR Check-in'],
+  };
+
+  function navigate(pageId) {
+    // hide all pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    // show target
+    const target = document.getElementById('page-' + pageId);
+    if (target) target.classList.add('active');
+
+    // update nav items
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    event && event.currentTarget && event.currentTarget.classList.add('active');
+
+    // update topbar
+    if (pageTitles[pageId]) {
+      document.getElementById('pageTitle').textContent = pageTitles[pageId][0];
+      document.getElementById('pageSubtitle').textContent = pageTitles[pageId][1];
+    }
+
+    // close sidebar on mobile
+    if (window.innerWidth <= 768) {
+      closeSidebar();
+    }
+  }
+
+  // Override nav-item clicks to track active
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ---- Sidebar (mobile) ----
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('mobile-open');
+    overlay.classList.toggle('open');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+    document.getElementById('sidebarOverlay').classList.remove('open');
+  }
+
+  // ---- Modals ----
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  // Close modal on outside click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+  });
+
+  // ---- Toast ----
+  function showToast(msg, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${icons[type]||'ℹ️'}</span> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(30px)';
+      toast.style.transition = 'all 0.3s';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // ---- Delete confirm ----
+  function confirmDelete(type) {
+    if (confirm(`ต้องการลบ${type}นี้ใช่หรือไม่?`)) {
+      showToast(`ลบ${type}เรียบร้อย`, 'success');
+    }
+  }
+
+  // ---- Animate stat numbers ----
+  function animateNumbers() {
+    document.querySelectorAll('.stat-value').forEach(el => {
+      const text = el.textContent;
+      el.style.opacity = '0';
+      setTimeout(() => {
+        el.style.transition = 'opacity 0.5s';
+        el.style.opacity = '1';
+      }, 300);
+    });
+  }
+
+  // Init
+  animateNumbers();
+</script>
+</body>
+</html>
