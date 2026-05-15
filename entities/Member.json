@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "properties": {
+    "member_id": {
+      "type": "string"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "national_id": {
+      "type": "string"
+    },
+    "birth_date": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "province": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "occupation": {
+      "type": "string"
+    },
+    "membership_type": {
+      "type": "string",
+      "enum": [
+        "annual",
+        "lifetime"
+      ]
+    },
+    "membership_plan_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "expired"
+      ]
+    },
+    "id_card_url": {
+      "type": "string"
+    },
+    "profile_image_url": {
+      "type": "string"
+    },
+    "qr_code_url": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string"
+    },
+    "expire_date": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Member"
+}
