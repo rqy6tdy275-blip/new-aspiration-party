@@ -1,0 +1,62 @@
+{
+  "type": "object",
+  "properties": {
+    "title_th": {
+      "type": "string"
+    },
+    "title_en": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "economy",
+        "education",
+        "agriculture",
+        "health",
+        "technology",
+        "environment",
+        "labor",
+        "border",
+        "smart_city",
+        "digital_gov"
+      ]
+    },
+    "summary_th": {
+      "type": "string"
+    },
+    "summary_en": {
+      "type": "string"
+    },
+    "content_th": {
+      "type": "string"
+    },
+    "content_en": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "video_url": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published"
+      ]
+    },
+    "is_featured": {
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "name": "Policy"
+}
