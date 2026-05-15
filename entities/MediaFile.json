@@ -1,0 +1,37 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "pdf",
+        "document"
+      ]
+    },
+    "size_kb": {
+      "type": "number"
+    },
+    "category": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "uploaded_by": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "MediaFile"
+}
