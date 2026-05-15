@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "province": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "skills": {
+      "type": "string"
+    },
+    "availability": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "inactive"
+      ]
+    },
+    "area": {
+      "type": "string"
+    },
+    "total_hours": {
+      "type": "number"
+    }
+  },
+  "required": [],
+  "name": "Volunteer"
+}
