@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "properties": {
+    "name_th": {
+      "type": "string"
+    },
+    "name_en": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "annual",
+        "lifetime"
+      ]
+    },
+    "price": {
+      "type": "number"
+    },
+    "benefits": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_active": {
+      "type": "boolean"
+    },
+    "duration_months": {
+      "type": "number"
+    }
+  },
+  "required": [],
+  "name": "MembershipPlan"
+}
