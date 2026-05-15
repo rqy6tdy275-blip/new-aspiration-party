@@ -1,0 +1,66 @@
+{
+  "type": "object",
+  "properties": {
+    "title_th": {
+      "type": "string"
+    },
+    "title_en": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "news",
+        "article",
+        "activity",
+        "press"
+      ]
+    },
+    "content_th": {
+      "type": "string"
+    },
+    "content_en": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ]
+    },
+    "published_date": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "view_count": {
+      "type": "number"
+    },
+    "meta_title": {
+      "type": "string"
+    },
+    "meta_description": {
+      "type": "string"
+    },
+    "is_featured": {
+      "type": "boolean"
+    }
+  },
+  "required": [],
+  "name": "News"
+}
