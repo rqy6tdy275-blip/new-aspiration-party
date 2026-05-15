@@ -1,0 +1,55 @@
+{
+  "type": "object",
+  "properties": {
+    "donor_name": {
+      "type": "string"
+    },
+    "donor_phone": {
+      "type": "string"
+    },
+    "donor_email": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": [
+        "promptpay",
+        "bank_transfer"
+      ]
+    },
+    "bank_name": {
+      "type": "string"
+    },
+    "slip_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    },
+    "receipt_url": {
+      "type": "string"
+    },
+    "transaction_ref": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approved_date": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Donation"
+}
