@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "title_th": {
+      "type": "string"
+    },
+    "title_en": {
+      "type": "string"
+    },
+    "description_th": {
+      "type": "string"
+    },
+    "description_en": {
+      "type": "string"
+    },
+    "event_date": {
+      "type": "string"
+    },
+    "event_time": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "province": {
+      "type": "string"
+    },
+    "google_map_url": {
+      "type": "string"
+    },
+    "cover_image": {
+      "type": "string"
+    },
+    "max_attendees": {
+      "type": "number"
+    },
+    "registered_count": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "upcoming",
+        "ongoing",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "live_url": {
+      "type": "string"
+    },
+    "is_online": {
+      "type": "boolean"
+    },
+    "qr_code_url": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "Event"
+}
