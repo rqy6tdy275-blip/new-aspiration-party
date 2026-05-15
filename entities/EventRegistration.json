@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "checked_in": {
+      "type": "boolean"
+    },
+    "checkin_time": {
+      "type": "string"
+    },
+    "qr_code": {
+      "type": "string"
+    }
+  },
+  "required": [],
+  "name": "EventRegistration"
+}
